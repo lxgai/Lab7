@@ -210,38 +210,17 @@
 
         let newString = endpt.value + "/" + formID.value;
 
-        // check if record exists
         fetch(newString,
           {
-            method: "get",
+            method: "put",
             headers: {
               "Content-Type": "application/json"
             }
           })
           .then(response => response.json())
           .then(data => {
-            if (!Object.keys(data).length) {
-              throw "No record with given ID exists";
-            }
-
-            // now update
-            fetch(newString,
-              {
-                method: "put",
-                headers: {
-                  "Content-Type": "application/json"
-                },
-                body: JSON.stringify(obj)
-              })
-              .then(response => response.json())
-              .then(data => {
-                let result = document.getElementById("output");
-                result.innerHTML = JSON.stringify(data);
-              })
-              .catch(error => {
-                let result = document.getElementById("output");
-                result.innerHTML = error;
-              });
+            let result = document.getElementById("output");
+            result.innerHTML = JSON.stringify(data);
 
 
           })
@@ -267,40 +246,18 @@
       let endpt = document.getElementById("endpoint");
       let newString = endpt.value + "/" + idnum;
 
-      // check if record exists
+      
       fetch(newString,
         {
-          method: "get",
+          method: "delete",
           headers: {
             "Content-Type": "application/json"
           }
         })
         .then(response => response.json())
         .then(data => {
-          if (!Object.keys(data).length) {
-            throw "No record with given ID exists";
-          }
-
-          // now delete
-          fetch(newString,
-            {
-              method: "delete",
-              headers: {
-                "Content-Type": "application/json"
-              }
-            })
-            .then(response => response.json())
-            .then(data => {
-              let result = document.getElementById("output");
-              result.innerHTML = JSON.stringify(data);
-            })
-            .catch(error => {
-              let result = document.getElementById("output");
-              result.innerHTML = error;
-            });
-
-
-
+          let result = document.getElementById("output");
+          result.innerHTML = JSON.stringify(data);
 
         })
         .catch(error => {
