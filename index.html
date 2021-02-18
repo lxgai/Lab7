@@ -79,6 +79,10 @@
     // the writeup to view the URL pattern for fetch one and fetch all
     function fetchAll() {
       let endpt = document.getElementById("endpoint");
+      let formR = document.getElementById("recordForm");
+      let formID = document.getElementById("recordIDcontainer");
+      formR.style.display = "none";
+      formID.style.display = "none";
 
       fetch(endpt.value,
         {
@@ -103,6 +107,10 @@
     // The main difference from fetchAll() will be the URL you request from; check
     // the writeup to view the URL pattern for fetch one and fetch all
     function fetchOne() {
+      let formR = document.getElementById("recordForm");
+      let formID = document.getElementById("recordIDcontainer");
+      formR.style.display = "none";
+      formID.style.display = "none";
       let idnum = prompt("Enter record id");
       let endpt = document.getElementById("endpoint");
       let newString = endpt.value + "/" + idnum;
@@ -134,7 +142,9 @@
     // the writeup to view the URL pattern for create and update
     function createRecord() {
       let formR = document.getElementById("recordForm");
+      let formID = document.getElementById("recordIDcontainer");
       formR.style.display = "block";
+      formID.style.display = "none";
       formR.addEventListener("submit", submitted);
       function submitted() {
         let endpt = document.getElementById("endpoint");
@@ -239,6 +249,10 @@
     // request; check the writeup to view the URL pattern for get one and delete. THERE IS NO 
     // delete all, only delete one.
     function deleteRecord() {
+      let formR = document.getElementById("recordForm");
+      let formID = document.getElementById("recordIDcontainer");
+      formR.style.display = "none";
+      formID.style.display = "none";
       let idnum = prompt("Enter record id");
       let endpt = document.getElementById("endpoint");
       let newString = endpt.value + "/" + idnum;
