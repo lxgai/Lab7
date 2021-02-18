@@ -73,16 +73,18 @@
 
   <!-- Main Script -->
   <script type="module">
+
+    let endpt = document.getElementById("endpoint");
+    let recordForm = document.getElementById("recordForm");
+    let recordIDcon = document.getElementById("recordIDcontainer");
+    let result = document.getElementById("output");
+
     // This function should fetch all of the data from the given endpoint.
     // From the 4 CRUD actions, this is the READ action, and uses the GET http method.
     // The main difference from fetchOne() will be the URL you request from; check
     // the writeup to view the URL pattern for fetch one and fetch all
     function fetchAll() {
-      let endpt = document.getElementById("endpoint");
-      let formR = document.getElementById("recordForm");
-      let formID = document.getElementById("recordIDcontainer");
-      formR.style.display = "none";
-      formID.style.display = "none";
+
 
       fetch(endpt.value,
         {
@@ -93,11 +95,9 @@
         })
         .then(response => response.json())
         .then(data => {
-          let result = document.getElementById("output");
           result.innerHTML = JSON.stringify(data);
         })
         .catch(error => {
-          let result = document.getElementById("output");
           result.innerHTML = error;
         });
     }
@@ -107,15 +107,11 @@
     // The main difference from fetchAll() will be the URL you request from; check
     // the writeup to view the URL pattern for fetch one and fetch all
     function fetchOne() {
-      let formR = document.getElementById("recordForm");
-      let formID = document.getElementById("recordIDcontainer");
-      formR.style.display = "none";
-      formID.style.display = "none";
-      let idnum = prompt("Enter record id");
-      let endpt = document.getElementById("endpoint");
-      let newString = endpt.value + "/" + idnum;
 
-      fetch(newString,
+      let idnum = prompt("Enter record id");
+      let url = endpt.value + "/" + idnum;
+
+      fetch(url,
         {
           method: "get",
           headers: {
@@ -127,11 +123,9 @@
           if (!Object.keys(data).length) {
             throw "No record with given ID exists";
           }
-          let result = document.getElementById("output");
           result.innerHTML = JSON.stringify(data);
         })
         .catch(error => {
-          let result = document.getElementById("output");
           result.innerHTML = error;
         });
     }
@@ -140,19 +134,17 @@
     // From the 4 CRUD actions, this is the CREATE action, and uses the POST http method.
     // The main difference from updateRecord() will be the URL you send data to; check
     // the writeup to view the URL pattern for create and update
-    function createRecord() {
-      let formR = document.getElementById("recordForm");
-      let formID = document.getElementById("recordIDcontainer");
-      formR.style.display = "block";
-      formID.style.display = "none";
+    function createRecord(toShow) {
 
-      let formauthor = document.getElementById("author");
-      let formtitle = document.getElementById("title");
-      
-      formR.addEventListener("submit", submittedCreate);
-      function submittedCreate() {
-        let endpt = document.getElementById("endpoint");
-        
+      if (toShow == "show") {
+        recordForm.style.display = "block";
+        return;
+      }
+      else {
+        let formauthor = document.getElementById("author");
+        let formtitle = document.getElementById("title");
+
+
         let obj = {
           title: formtitle.value,
           author: formauthor.value
@@ -168,15 +160,18 @@
           })
           .then(response => response.json())
           .then(data => {
-            let result = document.getElementById("output");
             result.innerHTML = JSON.stringify(data);
           })
           .catch(error => {
-            let result = document.getElementById("output");
             result.innerHTML = error;
           });
 
+
+
       }
+
+
+
 
 
     }
@@ -185,48 +180,68 @@
     // From the 4 CRUD actions, this is the UPDATE action, and uses the PUT http method.
     // The main difference from createRecord() will be the URL you send data to; check
     // the writeup to view the URL pattern for create and update
-    function updateRecord() {
-      let formR = document.getElementById("recordForm");
-      let formIDcon = document.getElementById("recordIDcontainer");
-      formR.style.display = "block";
-      formIDcon.style.display = "block";
+    function updateRecord(toShow) {
 
-      let formauthor = document.getElementById("author");
-      let formtitle = document.getElementById("title");
-      let formID = document.getElementById("recordID");
-  
+      if (action == "show") {
+        recordForm.style.display = "block";
+        recordIDcon.style.display = "block";
+        return;
+      }
+      else {
+        let formauthor = document.getElementById("author");
+        let formtitle = document.getElementById("title");
+        let formID = document.getElementById("recordID");
 
-      formR.addEventListener("submit", submittedUpdate);
-      function submittedUpdate() {
-        let endpt = document.getElementById("endpoint");
-   
+
         let obj = {
           title: formtitle.value,
           author: formauthor.value
         };
 
-        let newString = endpt.value + "/" + formID.value;
+        let url = endpt.value + "/" + formID.value;
 
-        fetch(newString,
+        // check if record exists
+        fetch(url,
           {
-            method: "put",
+            method: "get",
             headers: {
               "Content-Type": "application/json"
             }
           })
           .then(response => response.json())
           .then(data => {
-            let result = document.getElementById("output");
-            result.innerHTML = JSON.stringify(data);
+            if (!Object.keys(data).length) {
+              throw "No record with given ID exists";
+            }
 
+            // if it exists, update
+            fetch(url,
+              {
+                method: "put",
+                headers: {
+                  "Content-Type": "application/json"
+                },
+                body: JSON.stringify(obj)
+              })
+              .then(response => response.json())
+              .then(data => {
+                result.innerHTML = JSON.stringify(data);
+              })
+              .catch(error => {
+                result.innerHTML = error;
+              });
+
+            // result.innerHTML = JSON.stringify(data);
 
           })
           .catch(error => {
-            let result = document.getElementById("output");
             result.innerHTML = error;
           });
 
       }
+
+
+
     }
 
     // This function should use fetch to delete one existing entry in the given endpoint.
@@ -235,37 +250,59 @@
     // request; check the writeup to view the URL pattern for get one and delete. THERE IS NO 
     // delete all, only delete one.
     function deleteRecord() {
-      let formR = document.getElementById("recordForm");
-      let formID = document.getElementById("recordIDcontainer");
-      formR.style.display = "none";
-      formID.style.display = "none";
-      let idnum = prompt("Enter record id");
-      let endpt = document.getElementById("endpoint");
-      let newString = endpt.value + "/" + idnum;
 
-      
-      fetch(newString,
+      let idnum = prompt("Enter record id");
+      let url = endpt.value + "/" + idnum;
+
+
+      // check if record exists
+      fetch(url,
         {
-          method: "delete",
+          method: "get",
           headers: {
             "Content-Type": "application/json"
           }
         })
         .then(response => response.json())
         .then(data => {
-          let result = document.getElementById("output");
-          result.innerHTML = JSON.stringify(data);
+          if (!Object.keys(data).length) {
+            throw "No record with given ID exists";
+          }
 
+          // if it exists then delete it
+          fetch(url,
+            {
+              method: "delete",
+              headers: {
+                "Content-Type": "application/json"
+              }
+            })
+            .then(response => response.json())
+            .then(data => {
+              result.innerHTML = JSON.stringify(data);
+
+            })
+            .catch(error => {
+              result.innerHTML = error;
+
+            });
+          // result.innerHTML = JSON.stringify(data);
         })
         .catch(error => {
-          let result = document.getElementById("output");
           result.innerHTML = error;
-
         });
+
+
 
     }
 
     window.addEventListener('DOMContentLoaded', () => {
+
+      document.getElementById("action").addEventListener("change", () => {
+        recordForm.style.display = "none";
+        recordIDcon.style.display = "none";
+      });
+
       // Action Form Event Listener
       document
         .getElementById("actionForm")
