@@ -145,8 +145,8 @@
       let formID = document.getElementById("recordIDcontainer");
       formR.style.display = "block";
       formID.style.display = "none";
-      formR.addEventListener("submit", submitted);
-      function submitted() {
+      formR.addEventListener("submit", submittedCreate);
+      function submittedCreate() {
         let endpt = document.getElementById("endpoint");
         let formauthor = document.getElementById("author").value;
         let formtitle = document.getElementById("title").value;
@@ -187,8 +187,8 @@
       let formID = document.getElementById("recordIDcontainer");
       formR.style.display = "block";
       formID.style.display = "block";
-      formR.addEventListener("submit", submitted);
-      function submitted() {
+      formR.addEventListener("submit", submittedUpdate);
+      function submittedUpdate() {
         let endpt = document.getElementById("endpoint");
         let formauthor = document.getElementById("author").value;
         let formtitle = document.getElementById("title").value;
